@@ -34,7 +34,7 @@ streamlit.dataframe(fruits_to_show)
 
 
 
-#create function
+#create function to get information from api
 def get_fruityvice_data(fruit_choice):
     fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+fruit_choice)
         # transform json  to normalize
@@ -57,34 +57,34 @@ except URLError as e:
 
 
 
-    
-
-
-
-
-
-streamlit.header("The fruit load list contains")
+streamlit.header("View Our Fruit List- Add your Favorites ")
 #function to get the fruit from snowflake 
 def get_fruit_load_list():
     with my_cnx.cursor() as my_cur:
         my_cur.execute("SELECT * from fruit_load_list")
         return my_cur.fetchall()
 
-#add button 
-if streamlit.button('Get Fruit Load List'):
+#add button to load the list
+if streamlit.button('Get Fruit List'):
     #connection snowflake -add in the app the config of snowflake params
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
     my_data_rows=get_fruit_load_list()
+    #close the connection 
+    my_cnx.close()
     streamlit.dataframe(my_data_rows)
 
-
+#insert a new fruit in snowflake
 def insert_row_snowflake(new_fruit):
     with my_cnx.cursor() as my_cur:
-        my_cur.execute("insert into fruit_load_list values ('from streamlit')")
+        my_cur.execute("insert into fruit_load_list values ('"+new_fruit+"')")
     return ('Thanks for adding',new_fruit)
 
 add_my_fruit= streamlit.text_input ('What fruit would you like to add?','jackfruit')
 if streamlit.button('Insert new fruit'):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
-    back_funciton=insert_row_snowflake(add_my_fruit)
-    streamlit.write(back_funciton)
+    back_function=insert_row_snowflake(add_my_fruit)
+    #close the connection 
+    my_cnx.close()
+    streamlit.write(back_function)
+    #close the connection 
+
