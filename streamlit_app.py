@@ -3,6 +3,7 @@ import streamlit
 import pandas as pd
 import requests 
 streamlit.title('First Attempt Snowflake Api')
+import snowflake.connector
 
 
 streamlit.header('Breakfast Menu')
