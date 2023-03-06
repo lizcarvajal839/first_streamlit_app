@@ -2,10 +2,11 @@
 import streamlit
 import pandas as pd
 import requests 
-streamlit.title('First Attempt Snowflake Api')
 import snowflake.connector
+from urllib.error import URLError
 
 
+streamlit.title('First Attempt Snowflake Api')
 streamlit.header('Breakfast Menu')
 streamlit.text('🥣Omega 3 & Blueberry Oatmeal')
 streamlit.text('🥗Kale, Spinach & Rocket Smoothie')
@@ -14,6 +15,7 @@ streamlit.text('🥑🍞Avocado Toast')
 streamlit.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
 
 #reading csv from  s3 bucket
+#import pandas
 myfruit_list= pd.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
 streamlit.dataframe(myfruit_list)
 #select the column to set the index
@@ -45,6 +47,9 @@ fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
 # show json data into table 
 streamlit.dataframe(fruityvice_normalized)
 
+#dont run anything 
+streamlit.stop()
+
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()
 my_cur.execute("SELECT * from fruit_load_list")
@@ -53,6 +58,7 @@ streamlit.header("The fruit load list contains")
 streamlit.dataframe(my_data_rows)
 
 add_my_fruit= streamlit.text_input ('What fruit would you like to add?','jackfruit')
+
 
 streamlit.write('Thanks for adding',add_my_fruit)
 my_cur.execute ("insert into fruit_load_list values ('from streamlit')")
