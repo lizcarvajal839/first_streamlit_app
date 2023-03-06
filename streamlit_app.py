@@ -60,8 +60,7 @@ except URLError as e:
     
 
 
-#dont run anything 
-streamlit.stop()
+
 
 
 streamlit.header("The fruit load list contains")
@@ -89,7 +88,3 @@ if streamlit.button('Insert new fruit'):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
     back_funciton=insert_row_snowflake(add_my_fruit)
     streamlit.write(back_funciton)
-
-
-
-my_cur.execute ("insert into fruit_load_list values ('from streamlit')")
